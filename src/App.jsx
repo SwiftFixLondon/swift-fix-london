@@ -1154,7 +1154,7 @@ export default function SwiftFixLondon() {
                   style={{display:"flex",alignItems:"center",justifyContent:"center",width:"100%",height:46,background:(!time||isSlotTaken(date,time)||isTooLateToBook(date,time))?"#94a3b8":C.navy,color:"white",border:"none",borderRadius:12,fontSize:14,fontWeight:700,cursor:(!time||isSlotTaken(date,time)||isTooLateToBook(date,time))?"not-allowed":"pointer",marginBottom:8}}>
                   Reserve slot
                 </button>
-                <a href="https://pay.tide.co/0b51f6f4-0846-4357-bbd0-855193e22a54" target="_blank" rel="noreferrer"
+                <a href="https://pay.tide.co/2a1ab64b-1d04-4eac-8bcc-f0f43cd2af6a" target="_blank" rel="noreferrer"
                   style={{display:"flex",alignItems:"center",justifyContent:"center",height:46,background:C.blue,color:"white",borderRadius:12,fontSize:14,fontWeight:700,marginBottom:8}}>
                   {t.depositCta}
                 </a>
