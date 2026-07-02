@@ -1,5 +1,5 @@
 import React from "react";
-import { createClient } from "@supabase/supabase-js"; const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+import { supabase } from "./supabaseClient";
 
 // ─── FAVICON (inline, injected into <head> via useEffect) ─────────────────────
 const FAVICON_SVG = `data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjYuMiAxNjguMyI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDMwLjUuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS40IEJ1aWxkIDMpICAtLT4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnN0MCB7CiAgICAgICAgZmlsbDogIzJlNzNlYTsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTEwOC40LDE5LjJDOTcuMiw3LjYsODEuNS4zLDY0LjEsMCw0Ni42LS4yLDMwLjgsNi42LDE5LjIsMTcuOCw3LjYsMjkuMS4zLDQ0LjgsMCw2Mi4yYy0uMiwxNS42LDUuMiwzMCwxNC41LDQxLjJsMTktMjEuNmMtMTAuMS0xNS40LTkuMS0zNi4zLDMuNy01MC44LDkuOC0xMS4xLDI0LjItMTUuOCwzNy45LTEzLjguNiwwLDEuMS4yLDEuNy4zLjguMiwxLjIsMS4xLjYsMS44bC0zMi4yLDM2LjVjLS40LjQtLjMsMS4xLDAsMS40bDI4LDI0LjdjLjQuNCwxLjEuMywxLjQsMGwzMi4yLTM2LjVjLjYtLjYsMS42LS40LDEuOC40LjIuNS4zLDEuMS41LDEuNiwzLjgsMTMuMy45LDI4LjItOC45LDM5LjMtMTIuOCwxNC41LTMzLjQsMTguMS01MCwxMGwtMjEuMSwyNGM4LjksMTEuNCwxNi43LDIzLjcsMjMuNSwzNi41bDUuNiwxMC41Yy41LjksMS43LjksMi4yLDBsLjgtMS41YzEyLjEtMjEuMiwyNy41LTQwLjMsNDUuMi01Ny4yLjItLjIuNC0uNC42LS42LDExLjYtMTEuMiwxOC45LTI2LjksMTkuMi00NC4zcy02LjYtMzMuMy0xNy44LTQ0LjlaTTY5LjEsNzEuMmwtMTIuNy0xMS4yYy0uNS0uNS0uNi0xLjItLjEtMS44bDEuNC0xLjZjLjUtLjUsMS4yLS42LDEuOC0uMWwxMi43LDExLjJjLjUuNS42LDEuMi4xLDEuOGwtMS40LDEuNmMtLjUuNS0xLjIuNi0xLjguMVoiLz4KPC9zdmc+`;
@@ -100,11 +100,17 @@ const slotDateTime = (dateStr, timeStr) => {
   return new Date(y, m-1, d, h, min, 0, 0);
 };
 
-// True if the slot starts in under 2 hours from now (or has already passed)
-const MIN_NOTICE_MS = 2 * 60 * 60 * 1000; // 2 hours
+// Rule 1 — slot disappears from calendar if it starts in under 2 hours and nobody booked it
+const SLOT_REMOVAL_MS = 2 * 60 * 60 * 1000; // 2 hours
 const isWithinNoticeWindow = (dateStr, timeStr) => {
   const slot = slotDateTime(dateStr, timeStr);
-  return (slot.getTime() - Date.now()) < MIN_NOTICE_MS;
+  return (slot.getTime() - Date.now()) < SLOT_REMOVAL_MS;
+};
+
+// Rule 2 — unconfirmed booking is auto-cancelled after 30 minutes from creation
+const PAYMENT_WINDOW_MS = 30 * 60 * 1000; // 30 minutes
+const isPaymentExpired = (createdAt) => {
+  return (Date.now() - createdAt) > PAYMENT_WINDOW_MS;
 };
 
 // ─── COPY ─────────────────────────────────────────────────────────────────────
@@ -154,7 +160,7 @@ const COPY = {
     lateSlotNotice:"Devices collected at this time are returned the next working day.",
     tooLateTag:"Too late to book",
     tooLateNotice:"This slot starts in less than 2 hours, so it's no longer available to book online. Please WhatsApp us to check availability.",
-    autoCancelNotice:"Reservations are automatically released if the deposit isn't confirmed at least 2 hours before the slot.",
+    autoCancelNotice:"⚠️ You have 30 minutes to pay the £20 deposit. If payment is not confirmed, your slot will be released automatically.",
     depositTitle:"Secure your slot",
     depositDesc:"Pay the £20 deposit by card. It's deducted from your final repair price.",
     depositCta:"Pay £20 deposit",
@@ -227,7 +233,7 @@ const COPY = {
     lateSlotNotice:"Los dispositivos recogidos en esta franja se devuelven al día laborable siguiente.",
     tooLateTag:"Demasiado tarde para reservar",
     tooLateNotice:"Esta franja empieza en menos de 2 horas, por lo que ya no se puede reservar online. Escríbenos por WhatsApp para consultar disponibilidad.",
-    autoCancelNotice:"Las reservas se liberan automáticamente si el depósito no se confirma al menos 2 horas antes de la franja.",
+    autoCancelNotice:"⚠️ Tienes 30 minutos para pagar el depósito de £20. Si no se confirma el pago, tu franja se liberará automáticamente.",
     depositTitle:"Asegura tu franja",
     depositDesc:"Paga el depósito de £20 con tarjeta. Se descuenta del precio final.",
     depositCta:"Pagar depósito de £20",
@@ -634,6 +640,7 @@ export default function SwiftFixLondon() {
   const [bookingConfirmed, setBookingConfirmed] = React.useState(false);
   const [dbReady, setDbReady] = React.useState(false);
   const [bookingError, setBookingError] = React.useState("");
+  const [paymentCountdown, setPaymentCountdown] = React.useState(null); // seconds remaining
 
   const ADMIN_PASSWORD = "Chiara2026.swift";
 
@@ -726,20 +733,52 @@ export default function SwiftFixLondon() {
   const isLateSlot = (d, ti) => !!(availability[d] && availability[d][ti]);
   const isTooLateToBook = (d, ti) => !ti ? false : isWithinNoticeWindow(d, ti);
 
-  // ── Auto-release any reserved-but-unconfirmed slot once it's within 2 hours ──
-  // Runs against the real shared database, so it releases the slot for everyone.
+  // ── Rule 1: Remove unconfirmed bookings after 30 minutes from creation ──
   React.useEffect(() => {
     if (!dbReady) return;
     const sweep = async () => {
-      const stale = bookedSlots.filter(b => !b.confirmed && isWithinNoticeWindow(b.date, b.time));
-      for (const b of stale) {
+      const expired = bookedSlots.filter(b => !b.confirmed && isPaymentExpired(b.createdAt));
+      for (const b of expired) {
         await supabase.from("bookings").delete().eq("ref", b.ref);
       }
     };
     sweep();
-    const id = setInterval(sweep, 60 * 1000); // check every minute
+    const id = setInterval(sweep, 30 * 1000); // check every 30 seconds
     return () => clearInterval(id);
   }, [dbReady, bookedSlots]);
+
+  // ── Rule 2: Hide slots from calendar if start is within 2 hours and nobody booked ──
+  // (handled in render via isWithinNoticeWindow — slots already booked stay visible)
+
+  // ── Countdown timer: show seconds remaining for unconfirmed bookings ──
+  React.useEffect(() => {
+    if (!bookingConfirmed) { setPaymentCountdown(null); return; }
+    // Find the booking just made (most recent unconfirmed)
+    const latest = bookedSlots.filter(b => !b.confirmed).sort((a,b) => b.createdAt - a.createdAt)[0];
+    if (!latest) { setPaymentCountdown(null); return; }
+    const tick = () => {
+      const remaining = Math.max(0, PAYMENT_WINDOW_MS - (Date.now() - latest.createdAt));
+      setPaymentCountdown(Math.ceil(remaining / 1000));
+      if (remaining <= 0) setPaymentCountdown(0);
+    };
+    tick();
+    const id = setInterval(() => {
+      tick();
+      const remaining = Math.max(0, PAYMENT_WINDOW_MS - (Date.now() - latest.createdAt));
+      if (remaining <= 0) {
+        clearInterval(id);
+        setTimeout(() => { setBookingConfirmed(false); setPaymentCountdown(null); }, 5000);
+      }
+    }, 1000);
+    return () => clearInterval(id);
+  }, [bookingConfirmed, bookedSlots]);
+
+  const fmtCountdown = (secs) => {
+    if (secs === null) return "";
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${String(s).padStart(2,"0")}`;
+  };
 
   const handleBookSlot = async () => {
     if (!time || isSlotTaken(date, time) || isTooLateToBook(date, time)) return;
@@ -759,7 +798,7 @@ export default function SwiftFixLondon() {
       return;
     }
     setBookingConfirmed(true);
-    setTimeout(() => setBookingConfirmed(false), 4000);
+    // Don't auto-hide — the countdown timer will stay visible until payment or expiry
   };
 
   // Call this once the customer confirms payment on WhatsApp, to lock the slot in
@@ -769,6 +808,8 @@ export default function SwiftFixLondon() {
       .update({ confirmed: true })
       .eq("date", date)
       .eq("time", time);
+    setBookingConfirmed(false); // hide countdown once confirmed
+    setPaymentCountdown(null);
   };
 
   const waBase = "https://wa.me/447345889002?text=";
@@ -1070,13 +1111,31 @@ export default function SwiftFixLondon() {
                 )}
               </div>
 
-              {/* Booking confirmation toast */}
+              {/* Booking confirmation toast with countdown */}
               {bookingConfirmed && (
-                <div style={{background:"#dcfce7",border:"1px solid #86efac",borderRadius:12,padding:"12px 16px",marginBottom:12,animation:"slideIn .3s ease",display:"flex",alignItems:"center",gap:8}}>
-                  <span style={{fontSize:16}}>✓</span>
-                  <p style={{fontSize:13,fontWeight:600,color:"#166534"}}>
-                    Slot reserved! {isLateSlot(date,time) ? "Note: next-day return applies. " : ""}Now pay the deposit and confirm on WhatsApp.
-                  </p>
+                <div style={{background:"#dcfce7",border:"1px solid #86efac",borderRadius:12,padding:"12px 16px",marginBottom:12,animation:"slideIn .3s ease"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                    <span style={{fontSize:16}}>✓</span>
+                    <p style={{fontSize:13,fontWeight:700,color:"#166534"}}>
+                      Slot reserved!{isLateSlot(date,time) ? " Next-day return applies." : ""}
+                    </p>
+                  </div>
+                  {paymentCountdown !== null && paymentCountdown > 0 && (
+                    <div style={{background:"#fef3c7",border:"1px solid #fde68a",borderRadius:8,padding:"8px 12px",display:"flex",alignItems:"center",gap:8}}>
+                      <span style={{fontSize:16}}>⏱️</span>
+                      <div>
+                        <p style={{fontSize:12,fontWeight:700,color:"#92400e"}}>
+                          Time to pay: <span style={{fontSize:15,fontFamily:"monospace"}}>{fmtCountdown(paymentCountdown)}</span>
+                        </p>
+                        <p style={{fontSize:11,color:"#92400e"}}>Pay the £20 deposit before your slot is released automatically.</p>
+                      </div>
+                    </div>
+                  )}
+                  {paymentCountdown === 0 && (
+                    <div style={{background:"#fee2e2",border:"1px solid #fca5a5",borderRadius:8,padding:"8px 12px"}}>
+                      <p style={{fontSize:12,fontWeight:700,color:"#991b1b"}}>⏰ Time expired — your slot has been released. Please book again.</p>
+                    </div>
+                  )}
                 </div>
               )}
 
