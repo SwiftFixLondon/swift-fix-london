@@ -24,21 +24,29 @@ const IPHONE_MODELS = [
   "iPhone SE (2nd gen)","iPhone SE (3rd gen)",
 ];
 const PARTS = {
+  // Older models — prices unchanged, already good margin
   "iPhone SE (1st gen)":{s:25,b:12,p:20},"iPhone 6":{s:25,b:12,p:20},"iPhone 6 Plus":{s:30,b:12,p:20},
   "iPhone 6s":{s:25,b:12,p:20},"iPhone 6s Plus":{s:30,b:12,p:20},"iPhone 7":{s:25,b:12,p:20},
   "iPhone 7 Plus":{s:30,b:12,p:20},"iPhone 8":{s:28,b:12,p:20},"iPhone 8 Plus":{s:35,b:12,p:20},
   "iPhone X":{s:40,b:15,p:25},"iPhone XR":{s:35,b:15,p:25},"iPhone XS":{s:35,b:15,p:25},
-  "iPhone XS Max":{s:45,b:15,p:25},"iPhone 11":{s:35,b:15,p:25},"iPhone 11 Pro":{s:55,b:15,p:25},
-  "iPhone 11 Pro Max":{s:65,b:15,p:25},"iPhone 12 mini":{s:80,b:20,p:30},"iPhone 12":{s:70,b:20,p:30},
-  "iPhone 12 Pro":{s:80,b:20,p:30},"iPhone 12 Pro Max":{s:90,b:20,p:30},
-  "iPhone 13 mini":{s:90,b:25,p:30},"iPhone 13":{s:90,b:25,p:30},
-  "iPhone 13 Pro":{s:110,b:25,p:35},"iPhone 13 Pro Max":{s:120,b:25,p:35},
-  "iPhone 14":{s:110,b:25,p:35},"iPhone 14 Plus":{s:120,b:25,p:35},
-  "iPhone 14 Pro":{s:150,b:30,p:40},"iPhone 14 Pro Max":{s:160,b:30,p:40},
-  "iPhone 15":{s:130,b:30,p:40},"iPhone 15 Plus":{s:140,b:30,p:40},
+  "iPhone XS Max":{s:45,b:15,p:25},"iPhone 11":{s:35,b:15,p:25},
+  // iPhone 11 Pro/Max — updated (was £105/£115, now £120/£130)
+  "iPhone 11 Pro":{s:70,b:15,p:25},"iPhone 11 Pro Max":{s:80,b:15,p:25},
+  // iPhone 12 series — updated (was £120-£140, now £100-£120)
+  "iPhone 12 mini":{s:50,b:20,p:30},"iPhone 12":{s:50,b:20,p:30},
+  "iPhone 12 Pro":{s:60,b:20,p:30},"iPhone 12 Pro Max":{s:70,b:20,p:30},
+  // iPhone 13 series — updated (was £140-£170, now £135-£165)
+  "iPhone 13 mini":{s:85,b:25,p:30},"iPhone 13":{s:85,b:25,p:30},
+  "iPhone 13 Pro":{s:105,b:25,p:35},"iPhone 13 Pro Max":{s:115,b:25,p:35},
+  // iPhone 14 series — updated (was £160-£210, now £145-£210)
+  "iPhone 14":{s:95,b:25,p:35},"iPhone 14 Plus":{s:105,b:25,p:35},
+  "iPhone 14 Pro":{s:145,b:30,p:40},"iPhone 14 Pro Max":{s:160,b:30,p:40},
+  // iPhone 15 series — updated (was £180-£230, now £195-£230)
+  "iPhone 15":{s:145,b:30,p:40},"iPhone 15 Plus":{s:160,b:30,p:40},
   "iPhone 15 Pro":{s:170,b:35,p:45},"iPhone 15 Pro Max":{s:180,b:35,p:45},
-  "iPhone 16":{s:140,b:35,p:45},"iPhone 16 Plus":{s:150,b:35,p:45},
-  "iPhone 16 Pro":{s:190,b:40,p:50},"iPhone 16 Pro Max":{s:200,b:40,p:50},
+  // iPhone 16 series — updated (was £190-£250, now £210-£260)
+  "iPhone 16":{s:160,b:35,p:45},"iPhone 16 Plus":{s:170,b:35,p:45},
+  "iPhone 16 Pro":{s:190,b:40,p:50},"iPhone 16 Pro Max":{s:210,b:40,p:50},
   "iPhone SE (2nd gen)":{s:28,b:12,p:20},"iPhone SE (3rd gen)":{s:35,b:15,p:25},
 };
 const RKEYS = {
