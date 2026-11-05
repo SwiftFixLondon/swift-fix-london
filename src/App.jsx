@@ -136,7 +136,7 @@ const COPY = {
     priceLabel:"Your price",
     priceNote:"Parts · Labour · Warranty · £20 deposit deducted at checkout",
     ctaBook:"Book this repair", ctaWhatsApp:"Ask on WhatsApp",
-    stats:[{v:"8",l:"Areas covered"},{v:"£20",l:"Deposit to book"},{v:"5★",l:"Customer rating"},{v:"EN·ES",l:"Languages"}],
+    stats:[{v:"8",l:"Areas covered"},{v:"£20",l:"Deposit to book"},{v:"90",l:"Day warranty"},{v:"EN·ES",l:"Languages"}],
     servBadge:"Repairs", servTitle:"What we fix",
     servSub:"Three repairs. Transparent pricing. Collected from your door.",
     services:[
@@ -177,13 +177,10 @@ const COPY = {
     detailsDesc:"Optional — share more about the issue before collection.",
     detailsFields:["Full name","Collection address","iPhone model","Problem description","Repaired before?","Does it power on?","Preferred date","Preferred time","Email","WhatsApp number"],
     detailsCta:"Send details on WhatsApp",
-    revBadge:"Reviews", revTitle:"What customers say",
-    revSub:"Real reviews. Real customers across West London.",
-    reviews:[
-      {q:"Collected on time, fixed the screen perfectly and returned it the same afternoon. Couldn't be easier.",n:"Sarah M.",loc:"Ealing"},
-      {q:"WhatsApp booking was simple and the whole process was smooth from start to finish.",n:"James K.",loc:"Chiswick"},
-      {q:"Fair price, professional service. I've already recommended Swift Fix to three neighbours.",n:"Maria R.",loc:"Hammersmith"},
-    ],
+    revBadge:"Reviews", revTitle:"Read our reviews on Google",
+    revSub:"We only show genuine reviews. See what customers say about us on Google — and if we've fixed your iPhone, we'd love to hear from you.",
+    revCta:"See our Google reviews",
+    reviews:[],
     contactBadge:"Contact", contactTitle:"Get in touch",
     contactSub:"WhatsApp is fastest for quotes and booking. We also reply to email.",
     waLabel:"WhatsApp", emailLabel:"Email", webLabel:"Website", igLabel:"Instagram",
@@ -209,7 +206,7 @@ const COPY = {
     priceLabel:"Tu precio",
     priceNote:"Pieza · Mano de obra · Garantía · Depósito de £20 descontado del total",
     ctaBook:"Reservar esta reparación", ctaWhatsApp:"Consultar por WhatsApp",
-    stats:[{v:"8",l:"Zonas cubiertas"},{v:"£20",l:"Depósito de reserva"},{v:"5★",l:"Valoración clientes"},{v:"EN·ES",l:"Idiomas"}],
+    stats:[{v:"8",l:"Zonas cubiertas"},{v:"£20",l:"Depósito de reserva"},{v:"90",l:"Días de garantía"},{v:"EN·ES",l:"Idiomas"}],
     servBadge:"Reparaciones", servTitle:"Qué reparamos",
     servSub:"Tres servicios. Precios transparentes. Recogida desde tu puerta.",
     services:[
@@ -250,13 +247,10 @@ const COPY = {
     detailsDesc:"Opcional — cuéntanos más sobre el problema antes de la recogida.",
     detailsFields:["Nombre completo","Dirección de recogida","Modelo de iPhone","Descripción del problema","¿Reparado antes?","¿Enciende?","Fecha preferida","Hora preferida","Email","Número de WhatsApp"],
     detailsCta:"Enviar detalles por WhatsApp",
-    revBadge:"Reseñas", revTitle:"Lo que dicen los clientes",
-    revSub:"Reseñas reales. Clientes reales en West London.",
-    reviews:[
-      {q:"Recogida puntual, pantalla reparada perfectamente y devuelta esa misma tarde. No puede ser más fácil.",n:"Sarah M.",loc:"Ealing"},
-      {q:"La reserva por WhatsApp fue sencilla y todo el proceso fue fluido de principio a fin.",n:"James K.",loc:"Chiswick"},
-      {q:"Precio justo, servicio profesional. Ya he recomendado Swift Fix a tres vecinos.",n:"Maria R.",loc:"Hammersmith"},
-    ],
+    revBadge:"Reseñas", revTitle:"Lee nuestras reseñas en Google",
+    revSub:"Solo mostramos reseñas reales. Mira lo que dicen de nosotros en Google — y si te hemos reparado el iPhone, nos encantaría conocer tu opinión.",
+    revCta:"Ver nuestras reseñas en Google",
+    reviews:[],
     contactBadge:"Contacto", contactTitle:"Contáctanos",
     contactSub:"WhatsApp es la forma más rápida para presupuestos y reservas. También respondemos por email.",
     waLabel:"WhatsApp", emailLabel:"Email", webLabel:"Web", igLabel:"Instagram",
@@ -1204,6 +1198,7 @@ export default function SwiftFixLondon() {
               </div>
             ))}
           </div>
+          <a href="https://www.google.com/maps/search/?api=1&query=Swift+Fix+London+iPhone+repair" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",background:C.blue,color:"white",fontWeight:700,fontSize:15,padding:"14px 24px",borderRadius:12,textDecoration:"none"}}>{t.revCta} ↗</a>
         </Section>
 
         {/* CONTACT */}
